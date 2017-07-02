@@ -6,8 +6,9 @@ import random
 class Pong:
 
     """
-    param W: The width  of the game's window
-    param H: The height of the game's window
+    Args:
+        W: The width  of the game's window
+        H: The height of the game's window
     """
     def __init__(self, W, H):
         self.WINDOW_WIDTH  = W
@@ -36,11 +37,12 @@ class Pong:
 
     """
     Performs an action in the enviromnent causing a transition to the next state
-    return: (s, r, t, sc)
-        s -> new state (ndarray)
-        r -> Reward(state, action) (float)
-        t -> is this a terminal state, i.e. won or lost (boolean)
-        sc-> the running score (# times the ball was successfully blocked)
+    Returns:
+        (s, r, t, sc):
+            s -> new state (ndarray)
+            r -> Reward(state, action)
+            t -> is this a terminal state, i.e. won or lost (boolean)
+            sc-> the running score (# times successfully blocked)
     """
     def step(self, action):
         pygame.event.get() # flushes the event queue
@@ -54,7 +56,8 @@ class Pong:
 
     """
     Resets the game environment
-    return: The initial state (ndarray)
+    Returns:
+        The initial state (ndarray)
     """
     def reset(self):
         self.player_paddle = {
@@ -77,8 +80,10 @@ class Pong:
 
     """
     Moves the player's paddle either up or down according to the action
-    param action: the action being performed
-    raises ValueError: if the action is invalid
+    Args:
+        action: the action being performed
+    Raises:
+        ValueError: if the action is invalid
     """
     def move_player_paddle(self, action):
         if action == 0 and self.player_paddle['y'] + self.PADDLE_HEIGHT < self.WINDOW_HEIGHT:
@@ -120,9 +125,10 @@ class Pong:
         return
     """
     Checks the game's status and updates the ball's direction if necessary
-    return: (reward, terminal)
-        reward   -> the reward from the last action
-        terminal -> is this a terminal state, i.e. won or lost (boolean)
+    Returns:
+        (reward, terminal):
+            reward   -> the reward from the last action
+            terminal -> is this a terminal state, i.e. won or lost (boolean)
     """
     def check_status(self):
         reward = 0
@@ -148,7 +154,10 @@ class Pong:
         return (reward, False)
 
     """
-    return: true iff the paddle intersects the ball
+    Args:
+        paddle: The paddle in question
+    Returns:
+        True iff the paddle intersects the ball
     """
     def intersects_ball(self, paddle):
         ball_l = self.ball['x']
@@ -165,7 +174,8 @@ class Pong:
 
 
     """
-    return: the raw pixel data of the game (ndarray)
+    Returns:
+        The raw pixel data of the game (ndarray)
     """
     def get_state(self):
         return pygame.surfarray.array3d(pygame.display.get_surface())
@@ -188,11 +198,12 @@ class Pong:
 
     """
     Helper function to draw rectangles on the screen
-    param x: The upper side of the rectangle
-    param y: The left  side of the rectangle
-    param W: The width of the rectangle (extends to the right of x)
-    param H: The height of the rectangle (extends to the left of y)
-    param color: an RGB tuple representing the rectangle's color
+    Args:
+        x: The upper side of the rectangle
+        y: The left  side of the rectangle
+        W: The width of the rectangle (extends to the right of x)
+        H: The height of the rectangle (extends to the left of y)
+        color: an RGB tuple representing the rectangle's color
     """
     def draw_rect(self, x, y, W, H, color):
         rect = pygame.Rect( x, y, W, H )

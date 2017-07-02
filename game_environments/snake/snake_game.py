@@ -1,12 +1,18 @@
-import pygame, sys, random
-import numpy as np
-import Snake
-
 '''
 Author: Uriel Sade
+Date: June 30th 2017
+
 Snake Game controlled by a neural network with an API similar to OpenAI Gym
 ( step(a), sample(), reset() )
 '''
+
+#TODO: Documentation
+
+import pygame
+import sys
+import random
+import numpy as np
+from . import Snake
 
 class SnakeGame:
 
@@ -14,7 +20,7 @@ class SnakeGame:
         self.ROWS = R
         self.COLS = C
 
-        self.SCALE = 10
+        self.SCALE = 1
 
         self.W, self.H = self.COLS * self.SCALE, self.ROWS * self.SCALE
 
@@ -41,12 +47,12 @@ class SnakeGame:
             self.score += reward
             self.fruit = self.generate_new_fruit(self.snake.indices)
         if is_dead or self.time_since_last_reward > 75:
-            return self.cvtWorldToState(), reward, True, self.score
+            return pygame.surfarray.array3d(pygame.display.get_surface()), reward, True, self.score
         self.time_since_last_reward += 1
         self.draw(self.snake.indices)
         self.draw_rect(self.fruit[0], self.fruit[1], self.COLOR_RED) # draw the fruit
         pygame.display.flip()
-        return (self.cvtWorldToState(), reward, is_dead, self.score)
+        return (pygame.surfarray.array3d(pygame.display.get_surface()), reward, is_dead, self.score)
 
     def sample(self):
         return random.choice(range(3))
@@ -56,7 +62,7 @@ class SnakeGame:
         self.score = 0
         self.fruit = self.generate_new_fruit(self.snake.indices)
         self.time_since_last_reward = 0
-        return self.cvtWorldToState()
+        return pygame.surfarray.array3d(pygame.display.get_surface())
 
     '''
     Converts the world to the pixel input fed to the neural network
