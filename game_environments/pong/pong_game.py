@@ -79,6 +79,12 @@ class Pong:
         return self.get_state() # game's inital state
 
     """
+    Returns:
+        A random action
+    """
+    def sample(self):
+        return random.choice(range(self.action_space['n']))
+    """
     Moves the player's paddle either up or down according to the action
     Args:
         action: the action being performed
