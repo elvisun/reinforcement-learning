@@ -87,7 +87,7 @@ class NeuralNet:
         try:
             self.saver.restore(self.sess, save_path=self.checkpoint_dir)
             print("Checkpoint successfully loaded from {}.".format(self.checkpoint_dir))
-        except tf.errors.NotFoundException:
+        except tf.errors.NotFoundError:
             self.sess.run(tf.global_variables_initializer())
             print("No checkpoint found in {}.".format(self.checkpoint_dir))
 
