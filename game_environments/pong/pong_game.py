@@ -13,11 +13,11 @@ class Pong:
     def __init__(self, W, H):
         self.WINDOW_WIDTH  = W
         self.WINDOW_HEIGHT = H
-        self.PADDLE_WIDTH  = W//50
-        self.PADDLE_HEIGHT = H//10
+        self.PADDLE_WIDTH  = W//40
+        self.PADDLE_HEIGHT = H//7
 
         # TODO: Change to radius and make the ball a circle
-        self.BALL_WIDTH = W//40
+        self.BALL_WIDTH = W//60 + H//60
 
         self.PADDLE_SENSITIVITY = max(1, self.PADDLE_HEIGHT//5)
         self.BALL_SPEED = max(1, self.BALL_WIDTH//3)
@@ -27,7 +27,7 @@ class Pong:
         self.COLOR_BLUE = (0,0,255)
         self.COLOR_RED = (255,0,0)
 
-        self.GAME_TITLE = 'Pong'
+        self.GAME_TITLE = 'pong'
         self.world = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
         self.action_space = {'n':2, 'ACTION_CODES':[0,1], 'ACTIONS':['DOWN', 'UP']}
 

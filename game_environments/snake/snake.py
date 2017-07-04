@@ -7,20 +7,17 @@ dirs = ['R', 'U', 'L', 'D']
 
 class Snake:
 
-    W = 0
-    H = 0
-
     def __init__(self, W, H):
-        Snake.W = W
-        Snake.H = H
-        start_x = W//2
-        start_y = H//3
-        self.direction = dirs[1]
+        self.W = W
+        self.H = H
+        start_x = self.W//2
+        start_y = self.H//3
+        self.direction = 'U'
 
         self.indices = []
-        for _ in range(5):
+        for _ in range(3):
             self.indices.append((start_x, start_y))
-            start_y -= 1
+            start_y += 1
         self.head = self.indices[0]
 
 
@@ -61,7 +58,7 @@ class Snake:
      # Returns True if snake dies as a result of moving
     def move_right(self, fruit):
         self.direction = 'R'
-        if self.head[0] == Snake.W-1: return (True, NEGATIVE_REWARD)
+        if self.head[0] == self.W-1: return (True, NEGATIVE_REWARD)
 
         new_head = (self.head[0]+1, self.head[1])
         return self.update(new_head, fruit)
@@ -77,7 +74,7 @@ class Snake:
     # Returns True if snake dies as a result of moving
     def move_down(self, fruit):
         self.direction = 'D'
-        if self.head[1] == Snake.H-1: return (True, NEGATIVE_REWARD)
+        if self.head[1] == self.H-1: return (True, NEGATIVE_REWARD)
 
         new_head = (self.head[0], self.head[1]+1)
         return self.update(new_head, fruit)

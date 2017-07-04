@@ -12,15 +12,16 @@ import pygame
 import sys
 import random
 import numpy as np
-from . import Snake
+from game_environments.snake.snake import Snake
 
 class SnakeGame:
 
-    def __init__(self, R, C):
+    def __init__(self, R, C, training=True):
         self.ROWS = R
         self.COLS = C
 
-        self.SCALE = 1
+        self.SCALE = 10
+        self.training = training
 
         self.W, self.H = self.COLS * self.SCALE, self.ROWS * self.SCALE
 
@@ -29,11 +30,12 @@ class SnakeGame:
         self.COLOR_BLUE = (0,0,255)
         self.COLOR_RED = (255,0,0)
 
-        self.GAME_TITLE = 'Snake Neural Net'
+        self.GAME_TITLE = 'snake'
         self.world = pygame.display.set_mode((self.W, self.H))
         self.ACTIONS = 3
         pygame.display.set_caption(self.GAME_TITLE)
-        #self.clock = pygame.time.Clock() # remove fps when training
+        self.action_space = {'n':3, 'ACTION_CODES':[0,1, 2], 'ACTIONS':['STRAIGHT', 'LEFT', 'RIGHT']}
+        self.clock = pygame.time.Clock() # remove fps when training
 
         self.reset()
 
@@ -41,6 +43,8 @@ class SnakeGame:
     # except step returns (state, reward, done, score)
     def step(self, action):
         pygame.event.get()
+        if not self.training:
+            self.clock.tick(20)
         self.world.fill(self.COLOR_BLACK)
         is_dead, reward = self.snake.move(action, self.fruit)
         if(reward == 1):
@@ -58,10 +62,14 @@ class SnakeGame:
         return random.choice(range(3))
 
     def reset(self):
-        self.snake = Snake.Snake(self.COLS, self.ROWS)
+        self.snake = Snake(self.COLS, self.ROWS)
         self.score = 0
         self.fruit = self.generate_new_fruit(self.snake.indices)
         self.time_since_last_reward = 0
+        self.draw(self.snake.indices)
+        self.draw_rect(self.fruit[0], self.fruit[1], self.COLOR_RED)
+        #self.step(0)
+        pygame.display.flip()
         return pygame.surfarray.array3d(pygame.display.get_surface())
 
     '''

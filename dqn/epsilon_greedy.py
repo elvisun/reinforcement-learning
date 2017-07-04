@@ -14,14 +14,14 @@ class EpsilonGreedy:
         target_value: Final epsilon
         exploration_frames: Number of frames until epsilon reaches it's final value
     """
-    def __init__(self, initial_value=1.0, target_value=0.1, exploration_frames=1e6):
+    def __init__(self, initial_value=1.0, target_value=0.1, exploration_frames=1e6, fixed=False):
 
         if initial_value < target_value:
             raise ValueError("Initial value must be >= to target value")
 
         self.epsilon = initial_value
         self.explore = int(exploration_frames)
-        self.delta = (target_value - initial_value)/exploration_frames
+        self.delta = 0 if fixed else (target_value - initial_value)/exploration_frames
         self.target = target_value
 
     """
@@ -32,5 +32,5 @@ class EpsilonGreedy:
         self.epsilon = max(self.target, self.epsilon + self.delta)
         return random.random() <= self.epsilon
 
-    def value(self):
+    def peek(self):
         return self.epsilon

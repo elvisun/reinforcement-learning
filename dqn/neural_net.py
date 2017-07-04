@@ -3,7 +3,7 @@ Author: Uriel Sade
 Date: July 2nd, 2017
 """
 import tensorflow as tf
-from dqn.replay_memory import ReplayMemory
+import numpy as np
 import os
 
 class NeuralNet:
@@ -19,15 +19,14 @@ class NeuralNet:
                    action in each state
         learning_rate: The optimizer's learning rate
         game_title: name of the game being played
-        replay_memory: experience replay memory used for random minibatch
-                       optimization
     """
-    def __init__(self, W, H, N_ACTIONS, learning_rate, game_title, replay_memory=None):
-        self.replay_memory = replay_memory if replay_memory else ReplayMemory()
+    def __init__(self, W, H, N_ACTIONS, game_title, gamma=0.97, learning_rate=0.01):
+        tf.reset_default_graph()
         self.input_layer = tf.placeholder(shape=[None, W, H, 1], dtype=tf.float32, name="input_layer")
         self.lr = learning_rate
-        self.q_values_next = tf.placeholder(shape=[None, N_ACTIONS], dtype=tf.float32, name="q_next")
-        self.checkpoint_dir = "../saved_checkpoints/"
+        self.checkpoint_dir = os.path.join("saved_checkpoints/", game_title + "/" + game_title)
+        self.N_ACTIONS = N_ACTIONS
+        self.GAMMA = gamma
 
         weight_init = tf.truncated_normal_initializer(mean=0, stddev=0.03)
         activation  = tf.nn.relu
@@ -70,31 +69,27 @@ class NeuralNet:
                     activation=None)
 
         self.q_values = NN
+        self.prediction = tf.argmax(self.q_values, 1)
 
-        error = tf.square(self.q_values - self.q_values_next)
-        self.loss = tf.reduce_mean(tf.reduce_sum(error, axis=1))
+        self.q_target = tf.placeholder(shape=[None],dtype=tf.float32)
+        self.actions = tf.placeholder(shape=[None],dtype=tf.int32)
+        self.actions_onehot = tf.one_hot(self.actions,self.N_ACTIONS,dtype=tf.float32)
 
+        self.q_predicted = tf.reduce_sum(tf.multiply(self.q_values, self.actions_onehot), axis=1)
+
+        self.td_error = tf.square(self.q_target - self.q_predicted)
+        self.loss = tf.reduce_mean(self.td_error)
         self.optimizer = tf.train.AdamOptimizer(learning_rate=self.lr).minimize(self.loss)
 
-        self.sess  = tf.InteractiveSession()
+        self.sess = tf.Session()
         self.saver = tf.train.Saver()
 
         try:
-            last_checkpoint = tf.train.latest_checkpoint(checkpoint_dir=checkpoint_dir + game_title + "/")
-            self.saver.restore(self.sess, save_path=last_checkpoint)
-        except:
+            self.saver.restore(self.sess, save_path=self.checkpoint_dir)
+            print("Checkpoint successfully loaded from {}.".format(self.checkpoint_dir))
+        except tf.errors.NotFoundException:
             self.sess.run(tf.global_variables_initializer())
-    """
-    Saves the current session checkpoint
-    """
-    def save(self):
-        self.saver.save(self.sess, save_path=self.checkpoint_dir)
-
-    """
-    Closes the TensorFlow session being used
-    """
-    def close_session(self):
-        self.sess.close()
+            print("No checkpoint found in {}.".format(self.checkpoint_dir))
 
     """
     Q(state, network_params) -> (q_a1, q_a2, ..., q_an)
@@ -108,10 +103,66 @@ class NeuralNet:
         return self.sess.run(self.q_values, feed_dict={self.input_layer:states})
 
     """
+    Value function. Predicts the value of being in a given state.
+    Args:
+        states: The states one wants to know the value of.
+    Returns:
+        The maximum q-value predicted for each state.
+    """
+    def V(self, states):
+        q_values = self.Q(states)
+        v_values = [max(q_values[i]) for i in range(len(q_values))]
+        return v_values
+
+    """
+    Predicts the actions that should be taken at each state
+    Args:
+        states: The game states fed into the network
+    Returns:
+        An action for each state. Each action is an int in
+            the range (0, N_ACTIONS)
+    """
+    def predict(self, states):
+        q_values = self.Q(states)
+        actions = [np.argmax(q_values[i]) for i in range(len(states))]
+        return actions
+
+    """
+    Saves the current session checkpoint
+    """
+    def save(self):
+        self.saver.save(self.sess, save_path=self.checkpoint_dir)
+
+    """
+    Closes the TensorFlow session being used
+    """
+    def close_session(self):
+        self.sess.close()
+
+    """
     Optimize on the equation:
     [reward + GAMMA * max_a'(Q(s', a')) - Q(s, a)]^2
-    Args: ...
+    Args:
+        batch: The minibatch of (s, a, r, s1, t) being fed for optimizing.
+    Returns:
+        The loss calculated for the given minibatch.
     """
-    def optimize(self, args=...):
+    def optimize(self, batch):
         #TODO
-        ...
+        batch_size = len(batch)
+        states      = [batch[i][0] for i in range(batch_size)]
+        actions     = [batch[i][1] for i in range(batch_size)]
+        rewards     = [batch[i][2] for i in range(batch_size)]
+        next_states = [batch[i][3] for i in range(batch_size)]
+        terminal    = [batch[i][4] for i in range(batch_size)]
+
+        V = self.V(next_states)
+
+        q_target = [rewards[i] + (0 if terminal[i] else self.GAMMA*V[i]) \
+                    for i in range(batch_size)]
+
+        feed_dict = {self.input_layer: states, self.q_target: q_target, self.actions: actions}
+
+        _, loss = self.sess.run([self.optimizer, self.loss], feed_dict=feed_dict)
+
+        return loss

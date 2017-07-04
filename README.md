@@ -4,4 +4,4 @@ An attempt at implementing a DQN similar to DeepMind's DQN algorithm from the pa
 
 Special thanks to David Silver from DeepMind for [his course](https://youtu.be/2pWv7GOvuf0?list=PLzuuYNsE1EZAXYR4FJ75jcJseBmo4KQ9-) on Reinforcement Learning.
 
-This is an incomplete work in progress.
+This is continuing work in progress.
