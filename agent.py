@@ -20,7 +20,6 @@ def main():
         W, H = 100, 100
 
         env = SnakeGame(10,10, training=training)
-        env.step(1)
         #env = Pong(W, H)
         nn = NeuralNet(W,H, env.action_space['n'], env.GAME_TITLE, gamma=0.97, learning_rate=0.0001)
 
@@ -34,6 +33,7 @@ def main():
         games_played = 0
         scores = {}
         while True:
+            # make 10 moves, then train on a minibatch
             for i in range(10):
                 take_random = epsilon_greedy.evaluate()
                 if training and take_random:

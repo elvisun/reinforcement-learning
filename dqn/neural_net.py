@@ -24,7 +24,7 @@ class NeuralNet:
         tf.reset_default_graph()
         self.input_layer = tf.placeholder(shape=[None, W, H, 1], dtype=tf.float32, name="input_layer")
         self.lr = learning_rate
-        self.checkpoint_dir = os.path.join("saved_checkpoints/", game_title + "/" + game_title)
+        self.checkpoint_dir = os.path.join("saved_checkpoints/", game_title + "/" + "{}-{}-{}".format(game_title, self.W, self.H))
         self.N_ACTIONS = N_ACTIONS
         self.GAMMA = gamma
 
