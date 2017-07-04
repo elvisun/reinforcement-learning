@@ -3,6 +3,8 @@ Author: Uriel Sade
 Date: July 4rd, 2017
 """
 
+#TODO: move this into a class and run it's methods from a main script
+
 from dqn.neural_net import NeuralNet
 from dqn.replay_memory import ReplayMemory
 from dqn.epsilon_greedy import EpsilonGreedy
