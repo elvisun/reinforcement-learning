@@ -1,0 +1,116 @@
+Max Score: 0
+Games Played: 0
+Frame Iterations: 70
+Scores: 
+Training: False
+Session Time: 1499232318.502783 seconds
+
+==============================Max Score: 10
+Games Played: 4
+Frame Iterations: 344
+Scores: Scored   1:     1 Games.
+Scored   4:     2 Games.
+Scored  10:     1 Games.
+
+Training: False
+Session Time: 20.135901927947998 seconds
+
+========================================
+
+Max Score: 9
+Games Played: 2
+Frame Iterations: 166
+
+Scores:
+Scored   4:     1 game(s).
+Scored   9:     1 game(s).
+
+Training: False
+Session Time: 0.19 minutes
+
+========================================
+
+Max Score: 15
+Games Played: 464
+Frame Iterations: 39740
+
+Scores:
+Scored   0:    10 game(s).
+Scored   1:    24 game(s).
+Scored   2:    25 game(s).
+Scored   3:    33 game(s).
+Scored   4:    65 game(s).
+Scored   5:    50 game(s).
+Scored   6:    65 game(s).
+Scored   7:    46 game(s).
+Scored   8:    39 game(s).
+Scored   9:    25 game(s).
+Scored  10:    31 game(s).
+Scored  11:    20 game(s).
+Scored  12:    15 game(s).
+Scored  13:     8 game(s).
+Scored  14:     4 game(s).
+Scored  15:     4 game(s).
+
+Training: True
+Session Time: 55.40 minutes
+
+========================================
+
+Max Score: 20
+Games Played: 103
+Frame Iterations: 15428
+
+Scores:
+Scored   1:     2 game(s).
+Scored   2:     2 game(s).
+Scored   3:     2 game(s).
+Scored   4:     3 game(s).
+Scored   5:     3 game(s).
+Scored   6:     3 game(s).
+Scored   7:     5 game(s).
+Scored   8:     6 game(s).
+Scored   9:    11 game(s).
+Scored  10:    10 game(s).
+Scored  11:     6 game(s).
+Scored  12:    11 game(s).
+Scored  13:    14 game(s).
+Scored  14:    12 game(s).
+Scored  15:     8 game(s).
+Scored  16:     2 game(s).
+Scored  17:     2 game(s).
+Scored  20:     1 game(s).
+
+Training: False
+Session Time: 13.45 minutes
+
+========================================
+
+Max Score: 18
+Games Played: 143
+Frame Iterations: 21438
+
+Scores:
+Scored   1:     2 game(s).
+Scored   2:     1 game(s).
+Scored   3:     2 game(s).
+Scored   4:     1 game(s).
+Scored   5:     1 game(s).
+Scored   6:    11 game(s).
+Scored   7:     5 game(s).
+Scored   8:    13 game(s).
+Scored   9:    11 game(s).
+Scored  10:    17 game(s).
+Scored  11:    12 game(s).
+Scored  12:    17 game(s).
+Scored  13:    13 game(s).
+Scored  14:    14 game(s).
+Scored  15:     9 game(s).
+Scored  16:     5 game(s).
+Scored  17:     2 game(s).
+Scored  18:     1 game(s).
+
+Training: False
+Session Time: 18.71 minutes
+
+========================================

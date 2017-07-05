@@ -48,6 +48,7 @@ class SnakeGame:
         self.world.fill(self.COLOR_BLACK)
         is_dead, reward = self.snake.move(action, self.fruit)
         if(reward == 1):
+            self.time_since_last_reward = 0
             self.score += reward
             self.fruit = self.generate_new_fruit(self.snake.indices)
         if is_dead or self.time_since_last_reward > 75:

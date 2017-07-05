@@ -8,7 +8,12 @@ This is continuing work in progress.
 
 ### Video: After 7 hours of training:
 
-[![After 7 hours](https://i.ytimg.com/vi/81mS_m3puS8/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLCSm2gZhvIqMIH01npba3QiQPBjGw)](https://youtu.be/81mS_m3puS8)
+[![After 10 hours](https://i.ytimg.com/vi/GL9Q3f3fHwk/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLDZv22k5bbSSw-RuPu55o-CrMB72A)](https://youtu.be/GL9Q3f3fHwk)
+
+
+#### Score distribution after 10 hours of training:
+
+![Score dist. after 10 hours of training](.statistics/10_hours.png)
 
 #### Score distribution after 7 hours of training:
 
