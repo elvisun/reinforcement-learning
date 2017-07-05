@@ -52,7 +52,8 @@ def main():
                     max_score = max(max_score, score)
                     games_played += 1
                     scores[score] = scores.get(score, 0) + 1
-                    print("\rMax Score: {:3} || Score: {:3} || Games Played: {:10} Epsilon: {:.5f} Scores: ".format(max_score, score, games_played, epsilon_greedy.peek()), scores,  end="")
+                    e_value = 0 if not training else epsilon_greedy.peek()
+                    print("\rMax Score: {:3} || Score: {:3} || Games Played: {:10} Epsilon: {:.5f} Scores: ".format(max_score, score, games_played, e_value), scores,  end="")
                     s = env.reset()
                     s = cv2.cvtColor(s, cv2.COLOR_BGR2GRAY).reshape([W, H, 1])
             if training:
