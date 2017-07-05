@@ -65,8 +65,6 @@ def main():
                 s1 = cv2.cvtColor(s1, cv2.COLOR_BGR2GRAY).reshape([W, H, 1])
                 replay_memory.add((s, a, r, s1, t))
                 frame_iterations+=1
-                max_score = max(score, max_score)
-                print(score)
                 if not t:
                     s = s1
                 else:
@@ -74,7 +72,7 @@ def main():
                     games_played += 1
                     scores[score] = scores.get(score, 0) + 1
                     e_value = 0 if not training else epsilon_greedy.peek()
-                    print("\rMax Score: {:3} || Score: {:3} || Games Played: {:10} Epsilon: {:.5f} Scores: {}".format(max_score, score, games_played, e_value, str(scores)),  end="")
+                    print("\rMax Score: {:3} || Last Score: {:3} || Games Played: {:10} Epsilon: {:.5f} Scores: {}".format(max_score, score, games_played, e_value, str(scores)),  end="")
                     s = env.reset()
                     s = cv2.cvtColor(s, cv2.COLOR_BGR2GRAY).reshape([W, H, 1])
             if training:
