@@ -15,7 +15,6 @@ class EpsilonGreedy:
         exploration_frames: Number of frames until epsilon reaches it's final value
     """
     def __init__(self, initial_value=1.0, target_value=0.1, exploration_frames=1e6, fixed=False):
-
         if initial_value < target_value:
             raise ValueError("Initial value must be >= to target value")
 

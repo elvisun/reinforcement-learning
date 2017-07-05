@@ -13,14 +13,14 @@ class Pong:
     def __init__(self, W, H):
         self.WINDOW_WIDTH  = W
         self.WINDOW_HEIGHT = H
-        self.PADDLE_WIDTH  = W//40
+        self.PADDLE_WIDTH  = W//35
         self.PADDLE_HEIGHT = H//7
 
         # TODO: Change to radius and make the ball a circle
         self.BALL_WIDTH = W//60 + H//60
 
-        self.PADDLE_SENSITIVITY = max(1, self.PADDLE_HEIGHT//5)
-        self.BALL_SPEED = max(1, self.BALL_WIDTH//3)
+        self.PADDLE_SENSITIVITY = max(1, self.PADDLE_HEIGHT//4)
+        self.BALL_SPEED = max(1, self.BALL_WIDTH)
 
         self.COLOR_BLACK = (0,0,0)
         self.COLOR_WHITE = (255,255,255)
@@ -105,7 +105,7 @@ class Pong:
     Moves the opponent's paddle in the diraction of the ball
     """
     def move_opponent_paddle(self):
-        distance =  self.ball['y'] - self.opponent_paddle['y']
+        distance =  self.ball['y'] - (self.opponent_paddle['y'] + self.PADDLE_HEIGHT//2)
 
         if distance > 0 and self.opponent_paddle['y'] + self.PADDLE_HEIGHT < self.WINDOW_HEIGHT:
             self.opponent_paddle['y'] += min(self.PADDLE_SENSITIVITY, abs(distance))

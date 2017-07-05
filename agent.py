@@ -19,6 +19,15 @@ import time
 
 def main():
 
+    REPLAY_CAPACITY = 50000
+    INITIAL_EPSILON = 1.0
+    TARGET_EPSILON  = 0.01
+    EXPLORATION_FRAMES = 3e5
+    GAMMA = 0.97
+    LR = 0.0001
+
+    W, H = 100, 100
+
     opt, args = parser.get_arguments()
     training = parser.str2bool(opt.training)
     start_time = time.time()
@@ -31,14 +40,15 @@ def main():
     print("Training: ", training)
 
     try:
-        W, H = 100, 100
 
         env = SnakeGame(10,10, training=training)
         #env = Pong(W, H)
-        nn = NeuralNet(W,H, env.action_space['n'], env.GAME_TITLE, gamma=0.97, learning_rate=0.0001)
+        nn = NeuralNet(W,H, env.action_space['n'], env.GAME_TITLE, gamma=GAMMA, learning_rate=LR)
 
-        replay_memory = ReplayMemory(capacity=50000)
-        epsilon_greedy = EpsilonGreedy(initial_value=0.1, target_value=0.03, exploration_frames=1e4)
+        replay_memory = ReplayMemory(capacity=REPLAY_CAPACITY)
+        epsilon_greedy = EpsilonGreedy( initial_value=INITIAL_EPSILON,
+                                        target_value=TARGET_EPSILON,
+                                        exploration_frames=EXPLORATION_FRAMES)
         #epsilon_greedy = EpsilonGreedy()
 
         s = env.reset()
@@ -55,7 +65,8 @@ def main():
                 s1 = cv2.cvtColor(s1, cv2.COLOR_BGR2GRAY).reshape([W, H, 1])
                 replay_memory.add((s, a, r, s1, t))
                 frame_iterations+=1
-
+                max_score = max(score, max_score)
+                print(score)
                 if not t:
                     s = s1
                 else:
@@ -75,7 +86,7 @@ def main():
             nn.save()
             print("\nCheckpoint saved")
         nn.close_session()
-        stats_saver.save_to_file(max_score, games_played, frame_iterations, scores, training, start_time)
+        stats_saver.save_to_file(env.GAME_TITLE, max_score, games_played, frame_iterations, scores, training, start_time)
         print("Session closed")
 
 main()
