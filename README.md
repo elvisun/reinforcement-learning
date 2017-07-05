@@ -6,12 +6,16 @@ Special thanks to David Silver from DeepMind for [his course](https://youtu.be/2
 
 This is continuing work in progress.
 
-#### Initial Score Distribution (random actions):
+### Video: After 7 hours of training:
 
-![Initial Score Distribution (random actions)](./statistics/random_actions.png)
+[![After 7 hours](https://i.ytimg.com/vi/81mS_m3puS8/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLCSm2gZhvIqMIH01npba3QiQPBjGw)](https://youtu.be/81mS_m3puS8)
 
 #### Score distribution after 7 hours of training:
 
 ![Score dist. after 7 hours of training](./statistics/7_hours.png)
+
+#### Initial Score Distribution (random actions):
+
+![Initial Score Distribution (random actions)](./statistics/random_actions.png)
 
 More soon.
