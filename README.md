@@ -13,7 +13,7 @@ This is continuing work in progress.
 
 #### Score distribution after 10 hours of training:
 
-![Score dist. after 10 hours of training](.statistics/10_hours.png)
+![Score dist. after 10 hours of training](./statistics/10_hours.png)
 
 #### Score distribution after 7 hours of training:
 
