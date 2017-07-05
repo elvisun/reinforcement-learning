@@ -114,3 +114,107 @@ Training: False
 Session Time: 18.71 minutes
 
 ========================================
+
+Max Score: 17
+Games Played: 101
+Frame Iterations: 8020
+
+Scores:
+Scored   0:     3 game(s).
+Scored   1:    10 game(s).
+Scored   2:    11 game(s).
+Scored   3:     8 game(s).
+Scored   4:    15 game(s).
+Scored   5:     7 game(s).
+Scored   6:    12 game(s).
+Scored   7:     8 game(s).
+Scored   8:    12 game(s).
+Scored   9:     3 game(s).
+Scored  10:     6 game(s).
+Scored  11:     3 game(s).
+Scored  12:     1 game(s).
+Scored  15:     1 game(s).
+Scored  17:     1 game(s).
+
+Training: True
+Session Time: 11.88 minutes
+
+========================================
+
+Max Score: 14
+Games Played: 39
+Frame Iterations: 5237
+
+Scores:
+Scored   1:     1 game(s).
+Scored   4:     3 game(s).
+Scored   5:     1 game(s).
+Scored   6:     3 game(s).
+Scored   7:     1 game(s).
+Scored   8:     6 game(s).
+Scored   9:     2 game(s).
+Scored  10:     7 game(s).
+Scored  11:     5 game(s).
+Scored  12:     6 game(s).
+Scored  13:     2 game(s).
+Scored  14:     2 game(s).
+
+Training: False
+Session Time: 4.63 minutes
+
+========================================
+
+Max Score: 14
+Games Played: 13
+Frame Iterations: 1120
+
+Scores:
+Scored   2:     2 game(s).
+Scored   4:     1 game(s).
+Scored   5:     4 game(s).
+Scored   6:     1 game(s).
+Scored   8:     2 game(s).
+Scored  10:     2 game(s).
+Scored  14:     1 game(s).
+
+Training: False
+Session Time: 1.01 minutes
+
+========================================
+
+Max Score: 7
+Games Played: 1
+Frame Iterations: 181
+
+Scores:
+Scored   7:     1 game(s).
+
+Training: False
+Session Time: 0.20 minutes
+
+========================================
+
+Max Score: 3
+Games Played: 1
+Frame Iterations: 60
+
+Scores:
+Scored   3:     1 game(s).
+
+Training: False
+Session Time: 0.09 minutes
+
+========================================
+
+Max Score: 10
+Games Played: 2
+Frame Iterations: 222
+
+Scores:
+Scored   6:     1 game(s).
+Scored  10:     1 game(s).
+
+Training: False
+Session Time: 0.23 minutes
+
+========================================

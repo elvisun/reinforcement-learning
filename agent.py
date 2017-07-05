@@ -11,20 +11,11 @@ from dqn.epsilon_greedy import EpsilonGreedy
 from game_environments.pong.pong_game import Pong
 from game_environments.snake.snake_game import SnakeGame
 import util.parser as parser
+import util.stats_saver as stats_saver
 
 import numpy as np
 import cv2
 import time
-
-def save_stats(max_score, games_played, frame_iterations, scores, training, start_time):
-    """ TODO:  Move params to Stats object or dict"""
-    session_minutes = (time.time() - start_time) / 60
-    stats = "\n\nMax Score: {}\nGames Played: {}\nFrame Iterations: {}\n\nScores:\n{}\nTraining: {}\nSession Time: {:.2f} minutes\n\n" \
-            .format(max_score, games_played, frame_iterations, parser.sorted_dict2str(scores), training, session_minutes) + "="*40
-    f = open("statistics/stats.txt", "a")
-    f.write(stats)
-    f.close()
-
 
 def main():
 
@@ -72,7 +63,7 @@ def main():
                     games_played += 1
                     scores[score] = scores.get(score, 0) + 1
                     e_value = 0 if not training else epsilon_greedy.peek()
-                    print("\rMax Score: {:3} || Score: {:3} || Games Played: {:10} Epsilon: {:.5f} Scores: ".format(max_score, score, games_played, e_value), scores,  end="")
+                    print("\rMax Score: {:3} || Score: {:3} || Games Played: {:10} Epsilon: {:.5f} Scores: {}".format(max_score, score, games_played, e_value, str(scores)),  end="")
                     s = env.reset()
                     s = cv2.cvtColor(s, cv2.COLOR_BGR2GRAY).reshape([W, H, 1])
             if training:
@@ -84,7 +75,7 @@ def main():
             nn.save()
             print("\nCheckpoint saved")
         nn.close_session()
-        save_stats(max_score, games_played, frame_iterations, scores, training, start_time)
+        stats_saver.save_to_file(max_score, games_played, frame_iterations, scores, training, start_time)
         print("Session closed")
 
 main()
