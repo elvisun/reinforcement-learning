@@ -136,6 +136,8 @@ class NeuralNet:
     Saves the current session checkpoint
     """
     def save(self):
+        if not os.path.exists(self.checkpoint_dir):
+            os.makedirs(self.checkpoint_dir)
         self.saver.save(self.sess, save_path=self.checkpoint_dir)
 
     """
