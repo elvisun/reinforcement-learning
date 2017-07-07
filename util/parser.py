@@ -1,14 +1,19 @@
 import optparse
+import argparse
 """
 Helper script to get command line arguements
 """
 
-""" All keys must be o the same type"""
+""" All keys must be of the same type"""
 def sorted_dict2str(dictionary):
-    s = ""
+    s = "Score, Games\n"
+    sc = 0
     for k in sorted(dictionary.keys()):
+        while sc < k:
+            s += "{:5}, {:5}\n".format(sc, 0)
+            sc+=1
         v = dictionary[k]
-        s += "Scored {:3}: {:5} game(s).\n".format(k, v)
+        s += "{:5}, {:5}\n".format(k, v)
     return s
 
 
@@ -27,5 +32,9 @@ def get_arguments():
         action="store", dest="training",
         help="Training flag", default=True)
 
+    parser.add_option('-e', '--env',
+        action="store", dest="env",
+        help="Training Environment", default="snake")
+
     options, args = parser.parse_args()
-    return (options, args)
+    return (options.training, options.env)

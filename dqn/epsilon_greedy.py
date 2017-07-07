@@ -14,9 +14,12 @@ class EpsilonGreedy:
         target_value: Final epsilon
         exploration_frames: Number of frames until epsilon reaches it's final value
     """
-    def __init__(self, initial_value=1.0, target_value=0.1, exploration_frames=1e6, fixed=False):
-        if initial_value < target_value:
-            raise ValueError("Initial value must be >= to target value")
+    def __init__(self, initial_value=1.0, target_value=0.1, exploration_frames=1e6, fixed=False, verbose=True):
+        if initial_value < target_value and verbose:
+            # raise ValueError("Initial value must be >= to target value")
+            print("WARNING: \
+            Initial epsilon ({}) is smaller than final epsilon ({})." \
+            .format(initial_value, target_value))
 
         self.epsilon = initial_value
         self.explore = int(exploration_frames)

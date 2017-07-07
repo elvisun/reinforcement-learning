@@ -17,11 +17,10 @@ class ReplayMemory:
         capacity: The maximum entry capacity of the replay memory
         batch_size: The desired size of each sampled minibatch
     """
-    def __init__(self, capacity=50000, batch_size=32):
+    def __init__(self, capacity=50000):
 
         DEFAULT_CAPACITY = 50000
         self.MAX_CAPACITY = capacity if capacity >= 1000 else DEFAULT_CAPACITY
-        self.MINIBATCH_SIZE = batch_size
         self.internal_memory = []
         self.replace_index = 0
 
@@ -43,8 +42,7 @@ class ReplayMemory:
         A list from the replay memory containing
           random (s_t1, a_t1, r_t1, s_t2) tuples
     """
-    def get_minibatch(self, batch_size=None):
-        if not batch_size: batch_size = self.MINIBATCH_SIZE
+    def get_minibatch(self, batch_size=32):
         if len(self.internal_memory) < batch_size:
             batch_size = len(self.internal_memory)
         indices = np.random.choice( len(self.internal_memory),

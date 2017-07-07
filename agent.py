@@ -17,19 +17,26 @@ import numpy as np
 import cv2
 import time
 
+def process(state, W, H):
+    state = cv2.cvtColor(state, cv2.COLOR_RGB2GRAY)
+    state = cv2.normalize(state, state, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+    state = np.reshape(state, [W, H, 1])
+    return state
+
+
 def main():
 
     REPLAY_CAPACITY = 50000
     INITIAL_EPSILON = 1.0
-    TARGET_EPSILON  = 0.01
-    EXPLORATION_FRAMES = 3e5
+    TARGET_EPSILON  = 0.1
+    EXPLORATION_FRAMES = 1e6
     GAMMA = 0.97
-    LR = 0.0001
+    LR = 0.001
 
     W, H = 100, 100
 
-    opt, args = parser.get_arguments()
-    training = parser.str2bool(opt.training)
+    training, game = parser.get_arguments()
+    training = parser.str2bool(training)
     start_time = time.time()
 
     max_score = 0
@@ -40,9 +47,14 @@ def main():
     print("Training: ", training)
 
     try:
+        if game == 'pong':
+            env = Pong(W, H)
+        elif game == 'snake':
+            env = SnakeGame(10,10, training=training)
+        else:
+            print('Invalid game title')
+            return
 
-        env = SnakeGame(10,10, training=training)
-        #env = Pong(W, H)
         nn = NeuralNet(W,H, env.action_space['n'], env.GAME_TITLE, gamma=GAMMA, learning_rate=LR)
 
         replay_memory = ReplayMemory(capacity=REPLAY_CAPACITY)
@@ -52,7 +64,7 @@ def main():
         #epsilon_greedy = EpsilonGreedy()
 
         s = env.reset()
-        s = cv2.cvtColor(s, cv2.COLOR_BGR2GRAY).reshape([W, H, 1])
+        s = process(s, W, H)
         while True:
             # make 10 moves, then train on a minibatch
             for i in range(10):
@@ -62,7 +74,7 @@ def main():
                 else:
                     a = nn.predict([s])[0]
                 s1, r, t, score = env.step(a)
-                s1 = cv2.cvtColor(s1, cv2.COLOR_BGR2GRAY).reshape([W, H, 1])
+                s1 = process(s1, W, H)
                 replay_memory.add((s, a, r, s1, t))
                 frame_iterations+=1
                 if not t:
@@ -74,8 +86,8 @@ def main():
                     e_value = 0 if not training else epsilon_greedy.peek()
                     print("\rMax Score: {:3} || Last Score: {:3} || Games Played: {:10} Epsilon: {:.5f} Scores: {}".format(max_score, score, games_played, e_value, str(scores)),  end="")
                     s = env.reset()
-                    s = cv2.cvtColor(s, cv2.COLOR_BGR2GRAY).reshape([W, H, 1])
-            if training:
+                    s = process(s, W, H)
+            if training and frame_iterations > REPLAY_CAPACITY // 10:
                 batch = replay_memory.get_minibatch()
                 loss = nn.optimize(batch)
 
@@ -87,4 +99,5 @@ def main():
         stats_saver.save_to_file(env.GAME_TITLE, max_score, games_played, frame_iterations, scores, training, start_time)
         print("Session closed")
 
-main()
+if __name__ == "__main__":
+    main()

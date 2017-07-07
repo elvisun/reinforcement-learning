@@ -15,7 +15,7 @@ class Snake:
         self.direction = 'U'
 
         self.indices = []
-        for _ in range(3):
+        for _ in range(5):
             self.indices.append((start_x, start_y))
             start_y += 1
         self.head = self.indices[0]

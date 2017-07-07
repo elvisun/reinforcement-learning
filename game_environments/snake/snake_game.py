@@ -63,6 +63,7 @@ class SnakeGame:
         return random.choice(range(3))
 
     def reset(self):
+        self.world.fill(self.COLOR_BLACK)
         self.snake = Snake(self.COLS, self.ROWS)
         self.score = 0
         self.fruit = self.generate_new_fruit(self.snake.indices)
@@ -89,7 +90,8 @@ class SnakeGame:
         COLOR = self.COLOR_WHITE
         for pos in indices:
             self.draw_rect(pos[0], pos[1], COLOR)
-            COLOR = tuple(int(COLOR[i]*0.90) for i in range(len(COLOR)))
+            COLOR = tuple(int(COLOR[i]*0.95) for i in range(len(COLOR)))
+        self.draw_head()
 
     # TODO: revise this
     def generate_new_fruit(self, indices):
@@ -99,6 +101,13 @@ class SnakeGame:
         while new_fruit in indices:
             new_fruit = (random.randint(0,self.COLS-1), random.randint(0,self.ROWS-1))
         return new_fruit
+
+    def draw_head(self):
+        rect = pygame.Rect( self.snake.head[0] * self.SCALE + 1,
+                            self.snake.head[1] * self.SCALE + 1,
+                            max(0, self.SCALE-2),
+                            max(0, self.SCALE-2))
+        pygame.draw.rect(self.world, self.COLOR_BLUE, rect, 1)
 
     def draw_rect(self, x, y, color):
         SCALE = self.SCALE

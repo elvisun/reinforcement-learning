@@ -24,11 +24,11 @@ class NeuralNet:
         tf.reset_default_graph()
         self.input_layer = tf.placeholder(shape=[None, W, H, 1], dtype=tf.float32, name="input_layer")
         self.lr = learning_rate
-        self.checkpoint_dir = os.path.join("saved_checkpoints/", game_title + "/" + "{}-{}-{}".format(game_title, W, H))
+        self.checkpoint_dir = os.path.join("saved_checkpoints/", "{}/{}_{}/".format(game_title, W, H))
         self.N_ACTIONS = N_ACTIONS
         self.GAMMA = gamma
 
-        weight_init = tf.truncated_normal_initializer(mean=0, stddev=0.03)
+        weight_init = tf.truncated_normal_initializer(mean=0.03, stddev=0.03)
         activation  = tf.nn.relu
         padding     = 'SAME'
         conv2d = tf.layers.conv2d
@@ -84,12 +84,7 @@ class NeuralNet:
         self.sess = tf.Session()
         self.saver = tf.train.Saver()
 
-        try:
-            self.saver.restore(self.sess, save_path=self.checkpoint_dir)
-            print("Checkpoint successfully loaded from {}.".format(self.checkpoint_dir))
-        except tf.errors.NotFoundError:
-            self.sess.run(tf.global_variables_initializer())
-            print("No checkpoint found in {}.".format(self.checkpoint_dir))
+        self.load()
 
     """
     Q(state, network_params) -> (q_a1, q_a2, ..., q_an)
@@ -127,6 +122,16 @@ class NeuralNet:
         actions = [np.argmax(q_values[i]) for i in range(len(states))]
         return actions
 
+    """
+    Loads the previous session or starts a new one with random weights
+    """
+    def load(self):
+        if os.path.isdir(self.checkpoint_dir):
+            self.saver.restore(self.sess, save_path=self.checkpoint_dir)
+            print("Checkpoint successfully loaded from {}.".format(self.checkpoint_dir))
+        else:
+            self.sess.run(tf.global_variables_initializer())
+            print("No checkpoint found in {}.".format(self.checkpoint_dir))
     """
     Saves the current session checkpoint
     """
