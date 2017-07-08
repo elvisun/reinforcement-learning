@@ -30,7 +30,7 @@ def get_arguments():
 
     parser.add_option('-t', '--training',
         action="store", dest="training",
-        help="Training flag", default=True)
+        help="Training flag", default="True")
 
     parser.add_option('-e', '--env',
         action="store", dest="env",
