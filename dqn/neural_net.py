@@ -20,7 +20,7 @@ class NeuralNet:
         learning_rate: The optimizer's learning rate
         game_title: name of the game being played
     """
-    def __init__(self, W, H, N_ACTIONS, game_title, gamma=0.97, learning_rate=0.01):
+    def __init__(self, W, H, N_ACTIONS, game_title, gamma=0.97, learning_rate=0.0025, verbose=False):
         tf.reset_default_graph()
         self.input_layer = tf.placeholder(shape=[None, W, H, 1], dtype=tf.float32, name="input_layer")
         self.lr = learning_rate
@@ -28,7 +28,9 @@ class NeuralNet:
         self.N_ACTIONS = N_ACTIONS
         self.GAMMA = gamma
 
-        weight_init = tf.truncated_normal_initializer(mean=0.03, stddev=0.03)
+        self.verbose = verbose
+
+        weight_init = tf.truncated_normal_initializer(mean=0.0, stddev=0.003)
         activation  = tf.nn.relu
         padding     = 'SAME'
         conv2d = tf.layers.conv2d
@@ -61,6 +63,9 @@ class NeuralNet:
                     activation=activation)
         # 2nd fc layer
         NN = dense( name='fc2', inputs=NN, units=1024,
+                    kernel_initializer=weight_init,
+                    activation=activation)
+        NN = dense( name='fc3', inputs=NN, units=1024,
                     kernel_initializer=weight_init,
                     activation=activation)
         # Output layer
@@ -119,6 +124,7 @@ class NeuralNet:
     """
     def predict(self, states):
         q_values = self.Q(states)
+        if self.verbose: print("Q-Values: ", q_values)
         actions = [np.argmax(q_values[i]) for i in range(len(states))]
         return actions
 
@@ -136,6 +142,8 @@ class NeuralNet:
     Saves the current session checkpoint
     """
     def save(self):
+        if not os.path.exists(self.checkpoint_dir):
+            os.makedirs(self.checkpoint_dir)
         self.saver.save(self.sess, save_path=self.checkpoint_dir)
 
     """

@@ -18,8 +18,9 @@ import cv2
 import time
 
 def process(state, W, H):
+    state = cv2.resize(state, (W, H))
     state = cv2.cvtColor(state, cv2.COLOR_RGB2GRAY)
-    state = cv2.normalize(state, state, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+    #state = cv2.normalize(state, state, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
     state = np.reshape(state, [W, H, 1])
     return state
 
@@ -30,12 +31,13 @@ def main():
     INITIAL_EPSILON = 1.0
     TARGET_EPSILON  = 0.1
     EXPLORATION_FRAMES = 1e6
+    BATCH_SIZE = 32
     GAMMA = 0.97
-    LR = 0.001
+    LR = 0.0005
 
-    W, H = 100, 100
+    W, H = 20, 20
 
-    training, game = parser.get_arguments()
+    training, game, verbose = parser.get_arguments()
     training = parser.str2bool(training)
     start_time = time.time()
 
@@ -46,23 +48,21 @@ def main():
 
     print("Training: ", training)
 
+    if game == 'pong':
+        env = Pong(W, H)
+    elif game == 'snake':
+        env = SnakeGame(W,H, training=training)
+    else:
+        print('Invalid game title')
+        return
+
+    nn = NeuralNet(W,H, env.action_space['n'], env.GAME_TITLE, gamma=GAMMA, learning_rate=LR, verbose=verbose)
+
+    replay_memory = ReplayMemory(capacity=REPLAY_CAPACITY)
+    epsilon_greedy = EpsilonGreedy( initial_value=INITIAL_EPSILON,
+                                    target_value=TARGET_EPSILON,
+                                    exploration_frames=EXPLORATION_FRAMES)
     try:
-        if game == 'pong':
-            env = Pong(W, H)
-        elif game == 'snake':
-            env = SnakeGame(10,10, training=training)
-        else:
-            print('Invalid game title')
-            return
-
-        nn = NeuralNet(W,H, env.action_space['n'], env.GAME_TITLE, gamma=GAMMA, learning_rate=LR)
-
-        replay_memory = ReplayMemory(capacity=REPLAY_CAPACITY)
-        epsilon_greedy = EpsilonGreedy( initial_value=INITIAL_EPSILON,
-                                        target_value=TARGET_EPSILON,
-                                        exploration_frames=EXPLORATION_FRAMES)
-        #epsilon_greedy = EpsilonGreedy()
-
         s = env.reset()
         s = process(s, W, H)
         while True:
@@ -84,11 +84,13 @@ def main():
                     games_played += 1
                     scores[score] = scores.get(score, 0) + 1
                     e_value = 0 if not training else epsilon_greedy.peek()
-                    print("\rMax Score: {:3} || Last Score: {:3} || Games Played: {:10} Epsilon: {:.5f} Scores: {}".format(max_score, score, games_played, e_value, str(scores)),  end="")
+                    print("\rMax Score: {:3} || Last Score: {:3} || Games Played: {:10} Epsilon: {:.5f} Scores: {}" \
+                        .format(max_score, score, games_played, e_value, str(scores)),
+                        end="\n" if verbose or games_played % 1000 == 0 else "")
                     s = env.reset()
                     s = process(s, W, H)
             if training and frame_iterations > REPLAY_CAPACITY // 10:
-                batch = replay_memory.get_minibatch()
+                batch = replay_memory.get_minibatch(batch_size=BATCH_SIZE)
                 loss = nn.optimize(batch)
 
     except KeyboardInterrupt:

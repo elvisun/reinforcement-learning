@@ -44,20 +44,20 @@ class SnakeGame:
     def step(self, action):
         pygame.event.get()
         # if not self.training:
-        #     self.clock.tick(20)
+        #     self.clock.tick(60)
         self.world.fill(self.COLOR_BLACK)
         is_dead, reward = self.snake.move(action, self.fruit)
         if(reward == 1):
             self.time_since_last_reward = 0
             self.score += reward
             self.fruit = self.generate_new_fruit(self.snake.indices)
-        if is_dead or self.time_since_last_reward > 125:
-            return pygame.surfarray.array3d(pygame.display.get_surface()), reward, True, self.score
+        if is_dead or self.time_since_last_reward > self.ROWS*self.COLS:
+            return self.get_screen(), -1, True, self.score
         self.time_since_last_reward += 1
         self.draw(self.snake.indices)
         self.draw_rect(self.fruit[0], self.fruit[1], self.COLOR_RED) # draw the fruit
         pygame.display.flip()
-        return (pygame.surfarray.array3d(pygame.display.get_surface()), reward, is_dead, self.score)
+        return (self.get_screen(), reward, is_dead, self.score)
 
     def sample(self):
         return random.choice(range(3))
@@ -72,8 +72,11 @@ class SnakeGame:
         self.draw_rect(self.fruit[0], self.fruit[1], self.COLOR_RED)
         #self.step(0)
         pygame.display.flip()
-        return pygame.surfarray.array3d(pygame.display.get_surface())
+        return self.get_screen()
 
+
+    def get_screen(self):
+        return pygame.surfarray.array3d(pygame.display.get_surface())
     '''
     Converts the world to the pixel input fed to the neural network
     '''
@@ -103,6 +106,7 @@ class SnakeGame:
         return new_fruit
 
     def draw_head(self):
+        if self.SCALE <= 1: return
         rect = pygame.Rect( self.snake.head[0] * self.SCALE + 1,
                             self.snake.head[1] * self.SCALE + 1,
                             max(0, self.SCALE-2),
