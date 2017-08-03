@@ -14,7 +14,7 @@ This is continuing work in progress.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 otherwise  
 
 
-### Video: After 7 hours of training:
+### Video: After 7 hours of training (on a cpu... ):
 
 [![After 10 hours](https://i.ytimg.com/vi/GL9Q3f3fHwk/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLDZv22k5bbSSw-RuPu55o-CrMB72A)](https://youtu.be/GL9Q3f3fHwk)
 
