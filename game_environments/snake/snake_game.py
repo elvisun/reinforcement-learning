@@ -17,12 +17,13 @@ from game_environments.snake.snake import Snake
 class SnakeGame:
 
     def __init__(self, W, H, training=True, fps=15):
-        self.ROWS = H//SCALE
-        self.COLS = W//SCALE
 
         self.fps = fps # only if not training
         self.SCALE = 10
         self.training = training
+
+        self.ROWS = H//self.SCALE
+        self.COLS = W//self.SCALE
 
         self.W, self.H = self.COLS * self.SCALE, self.ROWS * self.SCALE
 
