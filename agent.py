@@ -35,7 +35,7 @@ def main():
     GAMMA = 0.97
     LR = 0.0005
 
-    W, H = 20, 20
+    W, H = 10, 10
 
     training, game, verbose = parser.get_arguments()
     training = parser.str2bool(training)
