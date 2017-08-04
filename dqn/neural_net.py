@@ -161,7 +161,6 @@ class NeuralNet:
         The loss calculated for the given minibatch.
     """
     def optimize(self, batch):
-        #TODO
         batch_size = len(batch)
         states      = [batch[i][0] for i in range(batch_size)]
         actions     = [batch[i][1] for i in range(batch_size)]
@@ -177,5 +176,4 @@ class NeuralNet:
         feed_dict = {self.input_layer: states, self.q_target: q_target, self.actions: actions}
 
         _, loss = self.sess.run([self.optimizer, self.loss], feed_dict=feed_dict)
-
         return loss

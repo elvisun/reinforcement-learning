@@ -20,6 +20,7 @@ import time
 def process(state, W, H):
     state = cv2.resize(state, (W, H))
     state = cv2.cvtColor(state, cv2.COLOR_RGB2GRAY)
+    #cv2.imwrite('test.png', state)
     #state = cv2.normalize(state, state, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
     state = np.reshape(state, [W, H, 1])
     return state
@@ -27,7 +28,7 @@ def process(state, W, H):
 
 def main():
 
-    REPLAY_CAPACITY = 50000
+    REPLAY_CAPACITY = 100000
     INITIAL_EPSILON = 1.0
     TARGET_EPSILON  = 0.1
     EXPLORATION_FRAMES = 1e6
@@ -35,9 +36,9 @@ def main():
     GAMMA = 0.97
     LR = 0.0005
 
-    W, H = 20, 20
+    W, H = 200, 200
 
-    training, game, verbose = parser.get_arguments()
+    training, game, verbose, fps = parser.get_arguments()
     training = parser.str2bool(training)
     start_time = time.time()
 
@@ -51,7 +52,7 @@ def main():
     if game == 'pong':
         env = Pong(W, H)
     elif game == 'snake':
-        env = SnakeGame(W,H, training=training)
+        env = SnakeGame(W,H, training=training, fps=fps)
     else:
         print('Invalid game title')
         return
@@ -84,8 +85,8 @@ def main():
                     games_played += 1
                     scores[score] = scores.get(score, 0) + 1
                     e_value = 0 if not training else epsilon_greedy.peek()
-                    print("\rMax Score: {:3} || Last Score: {:3} || Games Played: {:10} Epsilon: {:.5f} Scores: {}" \
-                        .format(max_score, score, games_played, e_value, str(scores)),
+                    print("\rMax Score: {:3} || Last Score: {:3} || Games Played: {:7} Iterations: {:10} Epsilon: {:.5f} Scores: {}" \
+                        .format(max_score, score, games_played, frame_iterations, e_value, str(scores)),
                         end="\n" if verbose or games_played % 1000 == 0 else "")
                     s = env.reset()
                     s = process(s, W, H)

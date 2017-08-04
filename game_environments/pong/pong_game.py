@@ -3,6 +3,11 @@ import random
 
 #TODO: map ball's y_speed to impact position along the paddles
 
+def linear_map(val, x1, x2, y1, y2):
+    slope = (y1-y2)/(x1-x2)
+    y = slope*(val - x1) + y1
+    return int(y)
+
 class Pong:
 
     """
@@ -10,7 +15,7 @@ class Pong:
         W: The width  of the game's window
         H: The height of the game's window
     """
-    def __init__(self, W, H):
+    def __init__(self, W, H, training=True, fps=15):
         self.WINDOW_WIDTH  = W
         self.WINDOW_HEIGHT = H
         self.PADDLE_WIDTH  = W//35
@@ -20,7 +25,8 @@ class Pong:
         self.BALL_WIDTH = W//60 + H//60
 
         self.PADDLE_SENSITIVITY = max(1, self.PADDLE_HEIGHT//4)
-        self.BALL_SPEED = max(1, self.BALL_WIDTH)
+        self.BALL_SPEED_X = max(1, self.BALL_WIDTH)
+        self.BALL_SPEED_Y = max(1, self.BALL_WIDTH)
 
         self.COLOR_BLACK = (0,0,0)
         self.COLOR_WHITE = (255,255,255)
@@ -32,6 +38,10 @@ class Pong:
         self.action_space = {'n':2, 'ACTION_CODES':[0,1], 'ACTIONS':['DOWN', 'UP']}
 
         pygame.display.set_caption(self.GAME_TITLE)
+
+        self.training = training
+        self.fps = fps
+        self.clock = pygame.time.Clock()
 
         self.reset()
 
@@ -46,6 +56,8 @@ class Pong:
     """
     def step(self, action):
         pygame.event.get() # flushes the event queue
+        if not self.training:
+            self.clock.tick(fps)
         self.world.fill(self.COLOR_BLACK)
         self.move_player_paddle(action)
         self.move_opponent_paddle()
@@ -69,7 +81,7 @@ class Pong:
                                'y':self.player_paddle['y']
                             }
         self.ball = {
-                      'x': self.WINDOW_WIDTH//2 - self.BALL_WIDTH//2,
+                      'x': self.opponent_paddle['x'] - self.BALL_WIDTH//2,
                       'y': self.WINDOW_HEIGHT//2 - self.BALL_WIDTH//2,
                       'x_direction': -1,
                       'y_direction': random.sample([-1,1], 1)[0]
@@ -118,8 +130,8 @@ class Pong:
     """
     def move_ball(self):
 
-        self.ball['y'] += self.ball['y_direction']*self.BALL_SPEED
-        self.ball['x'] += self.ball['x_direction']*self.BALL_SPEED
+        self.ball['y'] += self.ball['y_direction']*self.BALL_SPEED_Y
+        self.ball['x'] += self.ball['x_direction']*self.BALL_SPEED_X
 
         if self.ball['y'] < 0:
             self.ball['y'] = 0
@@ -146,15 +158,15 @@ class Pong:
             return (-1, True)
         elif self.ball['x'] <= player_paddle_right \
             and self.intersects_ball(self.player_paddle):
-            #if self.ball['x_direction'] = -1: reward = 1
+            reward = 1 if self.ball['x_direction'] == -1 else 0
             self.ball['x_direction'] = 1
-            reward = 1
             self.score += 1
 
         if ball_midpoint_x > opponent_paddle_left:
-            return (0, True)
+            return (1000, True)
         elif self.ball['x'] + self.BALL_WIDTH >= opponent_paddle_left \
             and self.intersects_ball(self.opponent_paddle):
+            reward = -1 if self.ball['x_direction'] == 1 else 0
             self.ball['x_direction'] = -1
 
         return (reward, False)
@@ -163,7 +175,8 @@ class Pong:
     Args:
         paddle: The paddle in question
     Returns:
-        True iff the paddle intersects the ball
+        True iff the paddle intersects the ball and adjusts the ball's y-speed
+        if they intersect.
     """
     def intersects_ball(self, paddle):
         ball_l = self.ball['x']
@@ -175,9 +188,14 @@ class Pong:
         paddle_t = paddle['y']
         paddle_b = paddle_t + self.PADDLE_HEIGHT
 
-        return ball_l <= paddle_r and ball_r > paddle_l \
+        intersects = ball_l <= paddle_r and ball_r > paddle_l \
             and ball_b > paddle_t and ball_t < paddle_b
 
+        if intersects:
+            dist_from_paddle_center = abs((ball_t + ball_b // 2) - (paddle_t + paddle_b // 2))
+            self.BALL_SPEED_Y = linear_map(dist_from_paddle_center, 0, self.PADDLE_HEIGHT//2, 0, self.BALL_WIDTH * 2)
+
+        return intersects
 
     """
     Returns:

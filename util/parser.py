@@ -30,15 +30,19 @@ def get_arguments():
 
     parser.add_option('-t', '--training',
         action="store", dest="training",
-        help="Training flag", default="True")
+        help="Training flag.", default="True")
 
     parser.add_option('-e', '--env',
         action="store", dest="env",
-        help="Training Environment", default="snake")
+        help="Training Environment.", default="snake")
 
     parser.add_option('-v', '--verbose',
         action="store_true", dest="v",
-        help="Verbose mode", default=False)
+        help="Verbose mode.", default=False)
+
+    parser.add_option('--fps', '--fr',
+        action="store", dest="fps",
+        help="Frame rate when not training.", default=15)
 
     options, args = parser.parse_args()
-    return (options.training, options.env, options.v)
+    return (options.training, options.env, options.v, int(options.fps))

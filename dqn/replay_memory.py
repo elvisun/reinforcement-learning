@@ -3,6 +3,7 @@ Author: Uriel Sade
 July 1st, 2017
 """
 import numpy as np
+import random
 
 class ReplayMemory:
     """
@@ -31,10 +32,6 @@ class ReplayMemory:
         if len(self.internal_memory) < self.MAX_CAPACITY:
             self.internal_memory.append(addition)
         else:
-            # i = 0
-            # while i < self.MAX_CAPACITY // 1000 and self.internal_memory[self.replace_index][2] > 0:
-            #     self.replace_index = (self.replace_index + 1) % self.MAX_CAPACITY
-            #     i += 1
             self.internal_memory[self.replace_index] = addition
             self.replace_index = (self.replace_index + 1) % self.MAX_CAPACITY
 

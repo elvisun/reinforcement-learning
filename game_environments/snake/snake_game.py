@@ -16,10 +16,11 @@ from game_environments.snake.snake import Snake
 
 class SnakeGame:
 
-    def __init__(self, R, C, training=True):
-        self.ROWS = R
-        self.COLS = C
+    def __init__(self, W, H, training=True, fps=15):
+        self.ROWS = H//SCALE
+        self.COLS = W//SCALE
 
+        self.fps = fps # only if not training
         self.SCALE = 10
         self.training = training
 
@@ -43,8 +44,8 @@ class SnakeGame:
     # except step returns (state, reward, done, score)
     def step(self, action):
         pygame.event.get()
-        # if not self.training:
-        #     self.clock.tick(60)
+        if not self.training:
+            self.clock.tick(self.fps)
         self.world.fill(self.COLOR_BLACK)
         is_dead, reward = self.snake.move(action, self.fruit)
         if(reward == 1):
