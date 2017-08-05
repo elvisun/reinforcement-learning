@@ -36,7 +36,7 @@ class Snake:
         elif new_head == fruit:
             reward = POSITIVE_REWARD
         else:
-            reward = 0
+            reward = NEGATIVE_REWARD/100
 
         return (is_dead, reward)
 

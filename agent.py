@@ -29,9 +29,9 @@ def process(state, W, H):
 def main():
 
     REPLAY_CAPACITY = 100000
-    INITIAL_EPSILON = 1.0
+    INITIAL_EPSILON = 0.56
     TARGET_EPSILON  = 0.1
-    EXPLORATION_FRAMES = 1e6
+    EXPLORATION_FRAMES = 5e5
     BATCH_SIZE = 32
     GAMMA = 0.97
     LR = 0.0005
