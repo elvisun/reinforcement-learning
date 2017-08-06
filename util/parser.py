@@ -11,9 +11,10 @@ def sorted_dict2str(dictionary):
     for k in sorted(dictionary.keys()):
         while sc < k:
             s += "{:5}, {:5}\n".format(sc, 0)
-            sc+=1
+            sc += 1
         v = dictionary[k]
         s += "{:5}, {:5}\n".format(k, v)
+        sc += 1
     return s
 
 
