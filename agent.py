@@ -17,28 +17,17 @@ import numpy as np
 import cv2
 import time
 
-def process(state, W, H):
-    state = cv2.resize(state, (W, H))
-    state = cv2.cvtColor(state, cv2.COLOR_RGB2GRAY)
-    #cv2.imwrite('test.png', state)
-    #state = cv2.normalize(state, state, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
-    state = np.reshape(state, [W, H, 1])
-    return state
-
-
 def main():
 
     REPLAY_CAPACITY = 100000
-    INITIAL_EPSILON = 0.56
+    INITIAL_EPSILON = 1.0
     TARGET_EPSILON  = 0.1
-    EXPLORATION_FRAMES = 5e5
+    EXPLORATION_FRAMES = 1e6
     BATCH_SIZE = 32
     GAMMA = 0.97
     LR = 0.0005
 
-    W, H = 100, 100
-
-    training, game, verbose, fps = parser.get_arguments()
+    training, game, verbose, fps, W, H = parser.get_arguments()
     training = parser.str2bool(training)
     start_time = time.time()
 
@@ -57,7 +46,10 @@ def main():
         print('Invalid game title')
         return
 
-    nn = NeuralNet(W,H, env.action_space['n'], env.GAME_TITLE, gamma=GAMMA, learning_rate=LR, verbose=verbose)
+    nn = NeuralNet(W,H, env.action_space['n'], env.GAME_TITLE, n_channels=1,
+                                                               gamma=GAMMA,
+                                                               learning_rate=LR,
+                                                               verbose=verbose)
 
     replay_memory = ReplayMemory(capacity=REPLAY_CAPACITY)
     epsilon_greedy = EpsilonGreedy( initial_value=INITIAL_EPSILON,
@@ -90,7 +82,7 @@ def main():
                         end="\n" if verbose or games_played % 1000 == 0 else "")
                     s = env.reset()
                     s = process(s, W, H)
-            if training and frame_iterations > REPLAY_CAPACITY // 10:
+            if training and frame_iterations > REPLAY_CAPACITY // 2:
                 batch = replay_memory.get_minibatch(batch_size=BATCH_SIZE)
                 loss = nn.optimize(batch)
 
@@ -101,6 +93,21 @@ def main():
         nn.close_session()
         stats_saver.save_to_file(env.GAME_TITLE, max_score, games_played, frame_iterations, scores, training, start_time)
         print("Session closed")
+
+"""
+Note: If for some reason OpenCV is not used, comment out the first 3 lines
+      in this function (as well as the import), reshape the state into
+      [W, H, 3] and pass in `3` as `n_channels` to the neural net model.
+      Doing so will take longer to train.
+"""
+def process(state, W, H):
+    state = cv2.resize(state, (W, H))
+    state = cv2.cvtColor(state, cv2.COLOR_RGB2GRAY)
+    #cv2.imwrite('test.png', state)
+    #state = cv2.normalize(state, state, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+    state = np.reshape(state, [W, H, 1])
+    return state
+
 
 if __name__ == "__main__":
     main()

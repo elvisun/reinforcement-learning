@@ -14,6 +14,7 @@ def sorted_dict2str(dictionary):
             sc+=1
         v = dictionary[k]
         s += "{:5}, {:5}\n".format(k, v)
+        sc+=1
     return s
 
 
@@ -42,7 +43,16 @@ def get_arguments():
 
     parser.add_option('--fps', '--fr',
         action="store", dest="fps",
-        help="Frame rate when not training.", default=15)
+        help="Frame rate when not training.", default=30)
+
+    parser.add_option('--width',
+        action="store", dest="W",
+        help="Input frame width.", default=100)
+
+    parser.add_option('--height',
+        action="store", dest="H",
+        help="Input frame height.", default=100)
 
     options, args = parser.parse_args()
-    return (options.training, options.env, options.v, int(options.fps))
+    return (options.training, options.env, options.v,
+            int(options.fps), int(options.W), int(options.H))

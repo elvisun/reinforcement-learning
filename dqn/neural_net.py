@@ -20,9 +20,9 @@ class NeuralNet:
         learning_rate: The optimizer's learning rate
         game_title: name of the game being played
     """
-    def __init__(self, W, H, N_ACTIONS, game_title, gamma=0.97, learning_rate=0.0025, verbose=False):
+    def __init__(self, W, H, N_ACTIONS, game_title, n_channels=1, gamma=0.97, learning_rate=0.0025, verbose=False):
         tf.reset_default_graph()
-        self.input_layer = tf.placeholder(shape=[None, W, H, 1], dtype=tf.float32, name="input_layer")
+        self.input_layer = tf.placeholder(shape=[None, W, H, n_channels], dtype=tf.float32, name="input_layer")
         self.lr = learning_rate
         self.checkpoint_dir = os.path.join("saved_checkpoints/", "{}/{}_{}/".format(game_title, W, H))
         self.N_ACTIONS = N_ACTIONS

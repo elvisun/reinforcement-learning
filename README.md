@@ -11,8 +11,9 @@ This is continuing work in progress.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in state `s` (e.g. snake game -> snake just   ate some food)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-1 if agent has lost as a result of the action `a` in state `s`  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(e.g. snake game -> snake went out of bounds or ran into itself)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-0.01 otherwise 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-0.01 otherwise
 
+Run with the `--help` flag to see possible command line args.
 
 ### Video: After 10 hours of training (on a cpu... ):
 
